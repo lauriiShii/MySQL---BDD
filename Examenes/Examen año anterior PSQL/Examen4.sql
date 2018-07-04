@@ -1,0 +1,8 @@
+CREATE DEFINER=`root`@`localhost` TRIGGER `universidad`.`notaprac_BEFORE_INSERT` BEFORE INSERT ON `notaprac` FOR EACH ROW
+BEGIN
+	DECLARE suspensos INT(2);
+    SELECT COUNT(*) INTO suspensos FROM notaprac WHERE nmat = NEW.nmat AND nota <= 4;
+	IF suspensos > 0 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ERROR, ESE ALUMNO HA SUSPENDIDO ALGUNA PRÁCTICA';
+	END IF;
+END
